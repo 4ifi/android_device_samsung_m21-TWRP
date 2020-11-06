@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-path=/var/lib/jenkins/workspace/Raghu
+path="/home/$(whoami)/m21-GSI-TWRP"
 
     cd $path
     mkdir bin
@@ -12,7 +12,11 @@ path=/var/lib/jenkins/workspace/Raghu
     cd twrp
     echo -ne '\n' | repo init -u git://github.com/RaghuVarma331/Twrp-Manifest.git -b android-10.0 --depth=1
     repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-    git clone https://github.com/RaghuVarma331/android_device_samsung_m21-TWRP.git -b android-10.0 device/samsung/m21
+    git clone https://github.com/4ifi/android_device_samsung_m21-TWRP.git -b android-10.0 device/samsung/m21
+    export ALLOW_MISSING_DEPENDENCIES=true
     . build/envsetup.sh && lunch omni_m21-eng && make -j$(nproc --all) recoveryimage
-    cd out/target/product/m21
-    mv recovery.img twrp-3.4.0-0-m21-10.0-$(date +"%Y%m%d").img
+    cd ..
+    mkdir build
+    mv -rf twrp/out/target/product/m21/recovery.img build/
+    echo Done!
+    echo $path/build/recovery.img
